@@ -1,6 +1,6 @@
 jpackage --input target/ \
   --name SeaShell \
-  --main-jar SeaShell.jar \
+  --main-jar SeaShell-jar-with-dependencies.jar \
   --main-class seashell.SeaShell \
   --type dmg \
   --icon "icons.icns" \
