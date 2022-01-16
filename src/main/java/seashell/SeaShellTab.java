@@ -9,8 +9,8 @@ import javax.swing.JTextArea;
 public class SeaShellTab extends JTextArea {
     private Config config;
     private Interpreter interpreter;
-    private String startingText = "& ";
-    private int previousCaretPosition;
+    private String prefix = "& ";
+    private int prefixPosition;
 
     public SeaShellTab() {
         config = new Config();
@@ -25,31 +25,33 @@ public class SeaShellTab extends JTextArea {
         return interpreter;
     }
 
-    public void setPreviousCaretPosition(int previousCaretPosition) {
-        this.previousCaretPosition = previousCaretPosition;
+    public void setPrefixPosition(int prefixPosition) {
+        this.prefixPosition = prefixPosition;
     }
 
-    public int getPreviousCaretPosition() {
-        return previousCaretPosition;
+    public int getPrefixPosition() {
+        return prefixPosition;
     }
 
     @Override
     public void append(String text) {
         super.append(text);
-        setCaretPosition(getText().length());
-        setPreviousCaretPosition(getText().length());
     }
 
     public void setStartingText(String startingText) {
-        this.startingText = startingText;
+        if (startingText != null && startingText.length() > 0)
+            this.prefix = startingText;
     }
 
     public String getStartingText() {
-        return startingText;
+        return prefix;
     }
 
     public void startNewLine() {
-        if (startingText != null & startingText.length() > 0)
-            append(startingText);
+        if (!getText().endsWith("\n"))
+            append("\n");
+        append(prefix);
+        setPrefixPosition(getText().length());
+        setCaretPosition(getText().length());
     }
 }

@@ -183,9 +183,10 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
             SeaShellTab seaShellTab = (SeaShellTab) scrollPane.getViewport().getView();
             Interpreter interpreter = seaShellTab.getInterpreter();
             String text = seaShellTab.getText();
-            int p = seaShellTab.getPreviousCaretPosition(), q = seaShellTab.getCaretPosition();
-            if (p < q) {
-                String code = text.substring(p, q);
+            int textLength = text.length();
+            int prefixPosition = seaShellTab.getPrefixPosition();
+            if (prefixPosition < textLength) {
+                String code = text.substring(prefixPosition, textLength);
                 interpreter.interpret(code);
             }
         }
