@@ -36,6 +36,8 @@ public class SeaShellTab extends JTextArea {
     @Override
     public void append(String text) {
         super.append(text);
+        setPrefixPosition(getText().length());
+        setCaretPosition(getText().length());
     }
 
     public void setStartingText(String startingText) {
@@ -51,7 +53,5 @@ public class SeaShellTab extends JTextArea {
         if (!getText().endsWith("\n"))
             append("\n");
         append(prefix);
-        setPrefixPosition(getText().length());
-        setCaretPosition(getText().length());
     }
 }

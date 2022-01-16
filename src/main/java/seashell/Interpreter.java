@@ -1,8 +1,10 @@
 package seashell;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +24,17 @@ public class Interpreter {
         this.config = config;
         logger = AppLogger.getLogger();
     }
-
+    
+    private void write(String line) {
+        BufferedWriter writer = process.outputWriter();
+        try {
+            writer.write(line);
+            writer.flush();
+        } catch (IOException ex) {
+            logger.warning(ex.toString());
+        }
+    }
+    
     private void read(Process process) {
         Thread thread = new Thread(() -> {
             try {
@@ -36,6 +48,7 @@ public class Interpreter {
             } catch (IOException | InterruptedException ex) {
                 logger.warning(ex.toString());
             } finally { 
+                this.process = null;
                 display.startNewLine();
             }
         });
@@ -52,27 +65,31 @@ public class Interpreter {
         }
     }
 
-    public void interpret(String code) {
-        logger.info("Interpreting command " + code);
+    public void interpret(String line) {
+        if (line == null || line.trim().length() == 0)
+            return;       
         
-        String[] args = code.split("\\s+");
-        if (args.length == 0) 
-            return;
-        
-        logger.info("args.length = " + args.length);
+        logger.info("Interpreting command " + line);  
+ 
+        if (process != null && process.isAlive()) 
+            write(line);
+        else {      
+            String[] args = line.split("\\s+");
+            logger.info("args.length = " + args.length);
 
-        String[] paths = config.getPaths();        
-        for (String path : paths) {
-            logger.info("Checking path " + path);
-            String filePath = path + System.getProperty("file.separator") + args[0];
-            logger.info("File path: " + filePath);
-            File file = new File(filePath);
-            if (file.exists() && !file.isDirectory()) {
-                logger.info("Found file " + filePath);
-                run(args);
-                logger.info("Started process " + args[0]);
-                logger.info("Running command " + code);
-                break;
+            String[] paths = config.getPaths();        
+            for (String path : paths) {
+                logger.info("Checking path " + path);
+                String filePath = path + System.getProperty("file.separator") + args[0];
+                logger.info("File path: " + filePath);
+                File file = new File(filePath);
+                if (file.exists() && !file.isDirectory()) {
+                    logger.info("Found file " + filePath);
+                    run(args);
+                    logger.info("Started process " + args[0]);
+                    logger.info("Running command " + line);
+                    break;
+                }
             }
         }
     }
