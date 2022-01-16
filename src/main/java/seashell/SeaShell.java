@@ -10,11 +10,11 @@ import java.util.logging.*;
 public class SeaShell extends JFrame implements KeyListener, ActionListener {
 
     private JMenuBar menuBar;
-    private JMenu file;
+    private JMenu fileMenu;
     private JMenuItem newTab, closeTab, saveFile, openFile, exit;
-    private JMenu colors;
+    private JMenu colorsMenu;
     private JMenuItem setForegroundColor, setBackgroundColor, blackwhite, graywhite, grayblue, tealwhite, purplewhite, whiteblack, whitegray, bluegray, whiteteal, whitepurple;
-    private JMenu settings;
+    private JMenu settingsMenu;
     private JMenuItem setTitle, setStarter;
     private JPanel panel;
     private JTabbedPane tabbedPane;
@@ -26,141 +26,37 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
     private final Color blue = new Color(0, 0, 204, 255);
     private Logger logger;
 
-    private class SeaShellTab extends JTextArea {
-        private Interpreter interpreter;
-        private String startingText = "& ";
-        private int previousCaretPosition;
-        
-        public SeaShellTab() {
-            interpreter = new Interpreter(this);
-        }
-        
-        public void setInterpreter(Interpreter interpreter) {
-            this.interpreter = interpreter;
-        }
-        
-        public Interpreter getInterpreter() {
-            return interpreter;
-        }
-        
-        public void setPreviousCaretPosition(int previousCaretPosition) {
-            this.previousCaretPosition = previousCaretPosition;
-        }
-        
-        public int getPreviousCaretPosition() {
-            return previousCaretPosition;
-        }
-        
-        @Override
-        public void append(String text) {
-            super.append(text);
-            setCaretPosition(getText().length());
-            setPreviousCaretPosition(getText().length());
-        }
-        
-        public void setStartingText(String startingText) {
-            this.startingText = startingText;
-        }
-        
-        public String getStartingText() {
-            return startingText;
-        }
-        
-        public void startNewLine() {
-            if (startingText != null & startingText.length() > 0)
-                append(startingText);
-        }
-    }
-    
-    private class Interpreter {
-        private SeaShellTab display;
-        private Process bash;
-        
-        public Interpreter(SeaShellTab display) {
-            this.display = display;
-            init();
-        }
-        
-        private void init() {
-            ProcessBuilder pb = new ProcessBuilder("/bin/bash");
-            try {
-                bash = pb.start();
-                read();
-            } catch (IOException e) {
-                logger.severe(e.toString());
-            }
-        }
-        
-        private void read() {
-            Thread thread = new Thread(() -> {
-                try {
-                    BufferedReader reader = bash.inputReader();
-                    char[] buf = new char[10000];
-                    while (bash.isAlive()) {
-                        while (reader.ready()) {
-                            int count = reader.read(buf, 0, 10000);
-                            display.append(new String(buf, 0, count));
-                        }
-                        Thread.sleep(100);
-                    }
-                } catch (IOException | InterruptedException ex) {
-                    logger.warning(ex.toString());
-                }                  
-            });
-            thread.start();
-        }
-        
-        public void interpret(String code, SeaShellTab display) {  
-            BufferedWriter writer = bash.outputWriter();
-            try {
-                writer.write(code, 0, code.length());
-                writer.flush();
-                Thread.sleep(1000);
-                display.startNewLine();
-            } catch (IOException | InterruptedException ex) {
-                logger.warning(ex.toString());
-            }
-        }
-    }
-
     public SeaShell() {
         super("SeaShell");
-        initLogger();
     }
-
-    private void initLogger() {
-        logger = Logger.getLogger("SeaShell");
-        logger.setLevel(Level.ALL);
-        logger.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
-        try {
-            logger.addHandler(new FileHandler("SeaShell.log", true));
-            logger.log(Level.INFO, "Set up file logging");
-        } catch (IOException e) {
-            System.err.println(e);
-        }
+    
+    public void init() {
+        logger = AppLogger.getLogger();
+        setLookAndFeel();
+        setupKeyStrokes();
     }
-
+    
     public void createAndShowGui() {
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         menuBar = new JMenuBar();
-        file = new JMenu("File");
+        fileMenu = new JMenu("File");
         newTab = new JMenuItem("New tab");
         newTab.addActionListener(this);
-        file.add(newTab);
+        fileMenu.add(newTab);
         closeTab = new JMenuItem("Close tab");
         closeTab.addActionListener(this);
-        file.add(closeTab);
+        fileMenu.add(closeTab);
         saveFile = new JMenuItem("Save file");
         saveFile.addActionListener(this);
-        file.add(saveFile);
+        fileMenu.add(saveFile);
         openFile = new JMenuItem("Open file");
         openFile.addActionListener(this);
-        file.add(openFile);
+        fileMenu.add(openFile);
         exit = new JMenuItem("Exit");
         exit.addActionListener(this);
-        file.add(exit);
-        colors = new JMenu("Colors");
+        fileMenu.add(exit);
+        colorsMenu = new JMenu("Colors");
         setForegroundColor = new JMenuItem("Set foreground color");
         setForegroundColor.addActionListener(this);
         setBackgroundColor = new JMenuItem("Set background color");
@@ -185,28 +81,28 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
         tealwhite.addActionListener(this);
         purplewhite = new JMenuItem("Purple white");
         purplewhite.addActionListener(this);
-        colors.add(setForegroundColor);
-        colors.add(setBackgroundColor);
-        colors.add(blackwhite);
-        colors.add(graywhite);
-        colors.add(bluegray);
-        colors.add(whiteteal);
-        colors.add(whitepurple);
-        colors.add(whiteblack);
-        colors.add(whitegray);
-        colors.add(grayblue);
-        colors.add(tealwhite);
-        colors.add(purplewhite);
-        settings = new JMenu("Settings");
+        colorsMenu.add(setForegroundColor);
+        colorsMenu.add(setBackgroundColor);
+        colorsMenu.add(blackwhite);
+        colorsMenu.add(graywhite);
+        colorsMenu.add(bluegray);
+        colorsMenu.add(whiteteal);
+        colorsMenu.add(whitepurple);
+        colorsMenu.add(whiteblack);
+        colorsMenu.add(whitegray);
+        colorsMenu.add(grayblue);
+        colorsMenu.add(tealwhite);
+        colorsMenu.add(purplewhite);
+        settingsMenu = new JMenu("Settings");
         setTitle = new JMenuItem("Set tab title");
         setTitle.addActionListener(this);
         setStarter = new JMenuItem("Set starting text");
         setStarter.addActionListener(this);
-        settings.add(setTitle);
-        settings.add(setStarter);
-        menuBar.add(file);
-        menuBar.add(colors);
-        menuBar.add(settings);
+        settingsMenu.add(setTitle);
+        settingsMenu.add(setStarter);
+        menuBar.add(fileMenu);
+        menuBar.add(colorsMenu);
+        menuBar.add(settingsMenu);
         setJMenuBar(menuBar);
         tabbedPane = new JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT);
         panel = new JPanel();
@@ -229,7 +125,7 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
                 String text = ta.getText();
                 writer.print(text);
             } catch (IOException e) {
-                logger.log(Level.WARNING, e.toString());
+                logger.warning(e.toString());
             }
         }
     }
@@ -246,7 +142,7 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
                 JTextArea ta = (JTextArea) sp.getViewport().getView();
                 ta.setText(text);
             } catch (IOException e) {
-                logger.log(Level.WARNING, e.toString());
+                logger.warning(e.toString());
             }
         }
     }
@@ -274,10 +170,13 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
         ta.setBackground(backgroundColor);
     }
 
+    @Override
     public void keyTyped(KeyEvent e) {}
 
+    @Override
     public void keyPressed(KeyEvent e) {}
 
+    @Override
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             JScrollPane scrollPane = (JScrollPane) tabbedPane.getSelectedComponent();
@@ -287,12 +186,12 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
             int p = seaShellTab.getPreviousCaretPosition(), q = seaShellTab.getCaretPosition();
             if (p < q) {
                 String code = text.substring(p, q);
-                logger.info("Interpreting code: " + code);
-                interpreter.interpret(code, seaShellTab);
+                interpreter.interpret(code);
             }
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == newTab) {
             String title = JOptionPane.showInputDialog(this, "Title:", "New tab", JOptionPane.QUESTION_MESSAGE);
@@ -359,24 +258,23 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
         } 
     }
 
-    public static void setLookAndFeel() {
+    public void setLookAndFeel() {
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-        } catch (Exception e) {
-            System.err.println(e);
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+            logger.warning(e.toString());
         }
     }
 
-    public static void setupKeyStrokes() {
+    public void setupKeyStrokes() {
         InputMap im = (InputMap) UIManager.get("TextArea.focusInputMap");
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
     }
 
     public static void main(String[] args) {
-        SeaShell.setLookAndFeel();
-        SeaShell.setupKeyStrokes();
         SeaShell seaShell = new SeaShell();
+        seaShell.init();
         seaShell.createAndShowGui();
     }
 }
