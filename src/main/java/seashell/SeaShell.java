@@ -236,7 +236,7 @@ public class SeaShell extends JFrame implements ActionListener {
         } else if (e.getSource() == purplewhite) {
             setColors(purple, Color.WHITE);
         } else if (e.getSource() == seaTheme) {
-            setColors(lightblue, Color.WHITE);
+            setColors(Color.WHITE, lightblue);
         } else if (e.getSource() == setTitle) {
             int index = tabbedPane.getSelectedIndex();
             if (index >= 0) {
