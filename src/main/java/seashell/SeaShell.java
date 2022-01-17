@@ -34,17 +34,9 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
         logger = AppLogger.getLogger();
         setLookAndFeel();
         setupKeyStrokes();
-        logger.info(environment());
+        logger.info(new EnvironmentMap("System environment", System.getenv()).toString());
     }
-    
-    public static String environment() {
-        StringBuilder s = new StringBuilder();
-        s.append("\n");
-        for (String key : System.getenv().keySet())
-            s.append("Environment variable: " + key + " Value: " + System.getenv().get(key) + "\n");
-        return s.toString();
-    }
-    
+   
     public void createAndShowGui() {
         setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

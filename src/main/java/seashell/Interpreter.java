@@ -17,13 +17,14 @@ public class Interpreter {
     private Config config;
     private Process process;
     private Logger logger;
-    private File workingDirectory;
+    private File workingDirectory, homeDirectory;
     
     public Interpreter(SeaShellTab display, Config config) {
         this.display = display;
         this.config = config;
         logger = AppLogger.getLogger();
         workingDirectory = new File(System.getProperty("user.dir"));
+        homeDirectory = new File(System.getProperty("user.home"));
     }
     
     private void write(String line) {
@@ -68,6 +69,20 @@ public class Interpreter {
         }
     }
 
+    private String finalize(String path) {
+        if (path.equals("~"))
+            return System.getProperty("user.home");
+        if (path.equals("..") && workingDirectory.getParent() != null)
+            return workingDirectory.getParent();
+        if (path.startsWith("~"))
+            return path.replaceFirst("~", System.getProperty("user.home"));
+        if (path.startsWith("..") && workingDirectory.getParent() != null)
+            return path.replaceFirst("..", workingDirectory.getParent());
+        if (!path.startsWith(System.getProperty("file.separator")))
+            return workingDirectory.getAbsolutePath() + System.getProperty("file.separator") + path;
+        return path;
+    }
+    
     public void interpret(String line) {
         if (line == null || line.trim().length() == 0)
             return;       
@@ -79,9 +94,10 @@ public class Interpreter {
         if (process != null && process.isAlive()) 
             write(line);
         else if (args[0].equals("cd") && args.length == 2) {
-            File file = new File(args[1]);
+            File file = new File(finalize(args[1]));
             if (file.exists() && file.isDirectory())
                 this.workingDirectory = file;
+            
             display.startNewLine();
         }
         else {      
@@ -100,6 +116,5 @@ public class Interpreter {
                 }
             }
         }
-        logger.info(SeaShell.environment());
     }
 }
