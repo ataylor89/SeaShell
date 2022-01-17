@@ -68,35 +68,18 @@ public class Interpreter {
         }
     }
 
-    private String substitute(String path) {
-        if (path.equals("~"))
-            return System.getProperty("user.home");
-        if (path.equals("..") && workingDirectory.getParent() != null)
-            return workingDirectory.getParent();
-        if (path.startsWith("~"))
-            return path.replaceFirst("~", System.getProperty("user.home"));
-        if (path.startsWith("..") && workingDirectory.getParent() != null)
-            return path.replaceFirst("..", workingDirectory.getParent());
-        return path;
-    }
-    
-    private String finalize(String path) {
-        path = substitute(path);
-        if (!path.startsWith(System.getProperty("file.separator")))
-            return workingDirectory.getAbsolutePath() + System.getProperty("file.separator") + path;
-        return path;
-    }    
-    
     public void interpret(String line) {
         if (line == null || line.trim().length() == 0)
             return;       
         
         String[] args = line.split("\\s+");
+        String wd = workingDirectory.getPath();
                 
         if (process != null && process.isAlive()) 
             write(line);
         else if (args[0].equals("cd") && args.length == 2) {
-            File file = new File(finalize(args[1]));
+            String filePath = PathUtils.absolute(args[1], wd);
+            File file = new File(filePath);
             if (file.exists() && file.isDirectory())
                 this.workingDirectory = file;
             
@@ -105,12 +88,9 @@ public class Interpreter {
         else {    
             String[] paths = config.getPaths();        
             for (String path : paths) {
-                path = substitute(path);
-                String filePath = path + System.getProperty("file.separator") + args[0];
+                String filePath = PathUtils.path(path, args[0]);
                 File file = new File(filePath);
                 if (file.exists() && !file.isDirectory()) {
-                    if (args.length == 2)
-                        args[1] = substitute(args[1]);
                     run(args);
                     break;
                 }

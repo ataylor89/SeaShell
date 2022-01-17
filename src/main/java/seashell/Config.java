@@ -45,10 +45,9 @@ public class Config {
     }
     
     public String[] getPaths() {
-        String[] arr = getPath().split(":");
-        String[] paths = new String[arr.length + 1];
-        paths[0] = System.getenv("PWD");
-        System.arraycopy(arr, 0, paths, 1, arr.length);
+        String[] paths = getPath().split(":");
+        for (int i = 0; i < paths.length; i++) 
+            paths[i] = PathUtils.substitute(paths[i]);
         return paths;
     }
     
