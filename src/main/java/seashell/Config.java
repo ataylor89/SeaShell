@@ -42,7 +42,7 @@ public class Config {
         } catch (IOException ex) {
             logger.warning(ex.toString());
         }
-        colorPattern = Pattern.compile("rgba\\((\\d+),(\\d+),(\\d+),(\\d+)\\)");
+        colorPattern = Pattern.compile("rgba\\((\\d+),\\s*(\\d+),\\s*(\\d+),\\s*(\\d+)\\)");
     }
     
     public String getPath() {
