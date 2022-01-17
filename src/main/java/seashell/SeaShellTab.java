@@ -1,5 +1,6 @@
 package seashell;
 
+import java.awt.Color;
 import javax.swing.JTextArea;
 
 /**
@@ -15,8 +16,16 @@ public class SeaShellTab extends JTextArea {
     public SeaShellTab() {
         config = new Config();
         interpreter = new Interpreter(this, config);
+        init();
     }
 
+    private void init() {
+        int[] fg = config.getForegroundColor();
+        int[] bg = config.getBackgroundColor();
+        setForeground(new Color(fg[0], fg[1], fg[2], fg[3]));
+        setBackground(new Color(bg[0], bg[1], bg[2], bg[3]));
+    }
+    
     public void setInterpreter(Interpreter interpreter) {
         this.interpreter = interpreter;
     }
