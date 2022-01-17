@@ -68,7 +68,7 @@ public class Interpreter {
         }
     }
 
-    private String finalize(String path) {
+    private String substitute(String path) {
         if (path.equals("~"))
             return System.getProperty("user.home");
         if (path.equals("..") && workingDirectory.getParent() != null)
@@ -77,19 +77,22 @@ public class Interpreter {
             return path.replaceFirst("~", System.getProperty("user.home"));
         if (path.startsWith("..") && workingDirectory.getParent() != null)
             return path.replaceFirst("..", workingDirectory.getParent());
+        return path;
+    }
+    
+    private String finalize(String path) {
+        path = substitute(path);
         if (!path.startsWith(System.getProperty("file.separator")))
             return workingDirectory.getAbsolutePath() + System.getProperty("file.separator") + path;
         return path;
-    }
+    }    
     
     public void interpret(String line) {
         if (line == null || line.trim().length() == 0)
             return;       
         
         String[] args = line.split("\\s+");
-        logger.info("args.length = " + args.length);
-        logger.info("Interpreting command " + line);
- 
+                
         if (process != null && process.isAlive()) 
             write(line);
         else if (args[0].equals("cd") && args.length == 2) {
@@ -99,18 +102,16 @@ public class Interpreter {
             
             display.startNewLine();
         }
-        else {      
+        else {    
             String[] paths = config.getPaths();        
             for (String path : paths) {
-                logger.info("Checking path " + path);
+                path = substitute(path);
                 String filePath = path + System.getProperty("file.separator") + args[0];
-                logger.info("File path: " + filePath);
                 File file = new File(filePath);
-                if (file.exists() && !file.isDirectory()) {                                       
-                    logger.info("Found file " + filePath);
+                if (file.exists() && !file.isDirectory()) {
+                    if (args.length == 2)
+                        args[1] = substitute(args[1]);
                     run(args);
-                    logger.info("Started process " + args[0]);
-                    logger.info("Running command " + line);
                     break;
                 }
             }

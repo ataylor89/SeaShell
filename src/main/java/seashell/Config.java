@@ -31,6 +31,8 @@ public class Config {
         String path = System.getProperty("user.home") + System.getProperty("file.separator") + ".seashell";
         try (FileInputStream in = new FileInputStream(path)) {
             properties.load(in);
+            logger.info("Loaded properties from path " + path);
+            logger.info("Properties\n" + properties.toString());
         } catch (FileNotFoundException ex) {
             logger.warning(ex.toString());
         } catch (IOException ex) {
