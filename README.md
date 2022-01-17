@@ -18,8 +18,10 @@ In the SeaShell folder type
 This should install the icons, the JAR files, and the Mac OS X application
 
 ## Configuration
-SeaShell has a configuration file .seashell which can be installed in your home directory in the macbuild.sh shell script
+SeaShell has a configuration file .seashell 
 
-The lines that install .seashell are commented out You can uncomment these lines to make it a part of the build script
+This file becomes active once it is installed in your home directory, ~/.seashell
 
-You can modify the .seashell configuration file to set the path variable, the color scheme, and the prefix variable
+SeaShell loads ~/.seashell every time a new tab is created and gets its default configuration from ~/.seashell
+
+You can uncomment the first three lines of macbuild.sh and run macbuild.sh to install .seashell to your home directory
