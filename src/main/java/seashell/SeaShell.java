@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.logging.*;
 
-public class SeaShell extends JFrame implements KeyListener, ActionListener {
+public class SeaShell extends JFrame implements ActionListener {
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -45,7 +45,6 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
     public void init() {
         logger = AppLogger.getLogger();
         setLookAndFeel();
-        setupKeyStrokes();
         logger.info(new EnvironmentMap("System environment", System.getenv()).toString());
     }
    
@@ -187,34 +186,11 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
-
-    @Override
-    public void keyPressed(KeyEvent e) {}
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            JScrollPane scrollPane = (JScrollPane) tabbedPane.getSelectedComponent();
-            SeaShellTab seaShellTab = (SeaShellTab) scrollPane.getViewport().getView();
-            Interpreter interpreter = seaShellTab.getInterpreter();
-            String text = seaShellTab.getText();
-            int textLength = text.length();
-            int prefixPosition = seaShellTab.getPrefixPosition();
-            if (prefixPosition < textLength) {
-                String code = text.substring(prefixPosition, textLength);
-                interpreter.interpret(code);
-            }
-        }
-    }
-
-    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == newTab) {
             String title = JOptionPane.showInputDialog(this, "Title:", "New tab", JOptionPane.QUESTION_MESSAGE);
             SeaShellTab seaShellTab = new SeaShellTab();
             seaShellTab.startNewLine();
-            seaShellTab.addKeyListener(this);
             JScrollPane scrollPane = new JScrollPane(seaShellTab);
             tabbedPane.addTab(title, scrollPane);
         } else if (e.getSource() == closeTab) {
@@ -286,13 +262,7 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
             logger.warning(e.toString());
         }
     }
-
-    public void setupKeyStrokes() {
-        InputMap im = (InputMap) UIManager.get("TextArea.focusInputMap");
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_DOWN_MASK), DefaultEditorKit.copyAction);
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.META_DOWN_MASK), DefaultEditorKit.pasteAction);
-    }
-      
+     
     public static void main(String[] args) {
         SeaShell seaShell = new SeaShell();
         seaShell.init();

@@ -100,4 +100,14 @@ public class Interpreter {
             }
         }
     }
+    
+    public boolean hasRunningProcess() {
+        return process != null && process.isAlive();
+    }
+    
+    public boolean closeRunningProcess() {
+        if (hasRunningProcess())
+            process.destroy();
+        return process.isAlive();
+    }
 }
