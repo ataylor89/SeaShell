@@ -73,12 +73,11 @@ public class Interpreter {
             return;       
         
         String[] args = line.split("\\s+");
-        String wd = workingDirectory.getPath();
                 
         if (process != null && process.isAlive()) 
             write(line);
         else if (args[0].equals("cd") && args.length == 2) {
-            String filePath = PathUtils.absolute(args[1], wd);
+            String filePath = new Path(workingDirectory, args[1]).toString();
             File file = new File(filePath);
             if (file.exists() && file.isDirectory())
                 this.workingDirectory = file;
@@ -88,7 +87,7 @@ public class Interpreter {
         else {    
             String[] paths = config.getPaths();        
             for (String path : paths) {
-                String filePath = PathUtils.path(path, args[0]);
+                String filePath = new Path(path, args[0]).toString();
                 File file = new File(filePath);
                 if (file.exists() && !file.isDirectory()) {
                     run(args);

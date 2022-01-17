@@ -45,10 +45,7 @@ public class Config {
     }
     
     public String[] getPaths() {
-        String[] paths = getPath().split(":");
-        for (int i = 0; i < paths.length; i++) 
-            paths[i] = PathUtils.substitute(paths[i]);
-        return paths;
+        return getPath().split(":");
     }
     
     public void setProperties(Properties properties) {
