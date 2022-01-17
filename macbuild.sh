@@ -1,5 +1,5 @@
 if [ ! -f icons.icns ]; then
-    ICON="SeaShell4.png"   
+    ICON="icons/SeaShell4.png"   
     mkdir icons.iconset
     sips -z 512 512   $ICON --out icons.iconset/icon_512x512.png
     cp $ICON icons.iconset/icon_512x512@2x.png
