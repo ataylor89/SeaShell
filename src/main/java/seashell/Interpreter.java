@@ -64,7 +64,7 @@ public class Interpreter {
             process = processBuilder.start();
             read(process);
         } catch (IOException ex) {
-            Logger.getLogger(Interpreter.class.getName()).log(Level.SEVERE, null, ex);
+            logger.warning(ex.toString());
         }
     }
 
@@ -74,7 +74,7 @@ public class Interpreter {
         
         String[] args = line.split("\\s+");
         
-        if (process != null && process.isAlive()) 
+        if (hasRunningProcess()) 
             write(line);
         else if (args[0].equals("cd") && args.length == 2) {
             String filePath = new Path(workingDirectory, args[1]).toString();
