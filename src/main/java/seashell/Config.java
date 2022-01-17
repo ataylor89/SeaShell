@@ -26,6 +26,7 @@ public class Config {
         defaultProps.put("PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin");
         defaultProps.put("FGCOLOR", "rgba(0,0,0,255)");
         defaultProps.put("BGCOLOR", "rgba(255,255,255,255)");
+        defaultProps.put("PREFIX", "%");
         return defaultProps;
     }
  
@@ -83,6 +84,10 @@ public class Config {
             return rgba;
         }
         return new int[] {255, 255, 255, 255};
+    }
+    
+    public String getPrefix() {
+        return properties.getProperty("PREFIX");
     }
     
     public void setProperties(Properties properties) {

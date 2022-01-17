@@ -1,3 +1,5 @@
+mvn clean install
+mvn assembly:single
 jpackage --input target/ \
   --name SeaShell \
   --main-jar SeaShell-jar-with-dependencies.jar \

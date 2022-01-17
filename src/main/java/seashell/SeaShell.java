@@ -13,17 +13,29 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
     private JMenu fileMenu;
     private JMenuItem newTab, closeTab, saveFile, openFile, exit;
     private JMenu colorsMenu;
-    private JMenuItem setForegroundColor, setBackgroundColor, blackwhite, graywhite, grayblue, tealwhite, purplewhite, whiteblack, whitegray, bluegray, whiteteal, whitepurple;
+    private JMenuItem setForegroundColor, 
+            setBackgroundColor, 
+            blackwhite, graywhite, 
+            grayblue, 
+            tealwhite, 
+            purplewhite, 
+            whiteblack, 
+            whitegray, 
+            bluegray, 
+            whiteteal, 
+            whitepurple,
+            seaTheme;
     private JMenu settingsMenu;
-    private JMenuItem setTitle, setStarter;
+    private JMenuItem setTitle, setPrefix;
     private JPanel panel;
     private JTabbedPane tabbedPane;
     private JFileChooser fileChooser;
     private Color foregroundColor, backgroundColor;
-    private final Color purple = new Color(153, 0, 153, 255);
-    private final Color teal = new Color(0, 153, 153, 255);
-    private final Color gray = new Color(204, 204, 204, 255);
-    private final Color blue = new Color(0, 0, 204, 255);
+    private final Color purple = new Color(153, 0, 153, 255),
+                        teal = new Color(0, 153, 153, 255),
+                        gray = new Color(204, 204, 204, 255),
+                        blue = new Color(0, 0, 204, 255),
+                        lightblue = new Color(0, 153, 255, 255);
     private Logger logger;
 
     public SeaShell() {
@@ -82,6 +94,8 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
         tealwhite.addActionListener(this);
         purplewhite = new JMenuItem("Purple white");
         purplewhite.addActionListener(this);
+        seaTheme = new JMenuItem("Sea theme");
+        seaTheme.addActionListener(this);
         colorsMenu.add(setForegroundColor);
         colorsMenu.add(setBackgroundColor);
         colorsMenu.add(blackwhite);
@@ -94,13 +108,14 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
         colorsMenu.add(grayblue);
         colorsMenu.add(tealwhite);
         colorsMenu.add(purplewhite);
+        colorsMenu.add(seaTheme);
         settingsMenu = new JMenu("Settings");
         setTitle = new JMenuItem("Set tab title");
         setTitle.addActionListener(this);
-        setStarter = new JMenuItem("Set starting text");
-        setStarter.addActionListener(this);
+        setPrefix = new JMenuItem("Set prefix");
+        setPrefix.addActionListener(this);
         settingsMenu.add(setTitle);
-        settingsMenu.add(setStarter);
+        settingsMenu.add(setPrefix);
         menuBar.add(fileMenu);
         menuBar.add(colorsMenu);
         menuBar.add(settingsMenu);
@@ -244,6 +259,8 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
             setColors(teal, Color.WHITE);
         } else if (e.getSource() == purplewhite) {
             setColors(purple, Color.WHITE);
+        } else if (e.getSource() == seaTheme) {
+            setColors(lightblue, Color.WHITE);
         } else if (e.getSource() == setTitle) {
             int index = tabbedPane.getSelectedIndex();
             if (index >= 0) {
@@ -251,12 +268,14 @@ public class SeaShell extends JFrame implements KeyListener, ActionListener {
                 if (title != null && title.trim().length() > 0)
                     tabbedPane.setTitleAt(index, title);
             }
-        } else if (e.getSource() == setStarter) {
+        } else if (e.getSource() == setPrefix) {
             JScrollPane scrollPane = (JScrollPane) tabbedPane.getSelectedComponent();
             SeaShellTab seaShellTab = (SeaShellTab) scrollPane.getViewport().getView();
             String s = JOptionPane.showInputDialog(this, "Set starting text: ", "Set starting text", JOptionPane.QUESTION_MESSAGE);
-            if (s != null && s.length() < 10)
-                seaShellTab.setStartingText(s);
+            if (s != null && s.length() < 10) {
+                seaShellTab.setPrefix(s.trim());
+                seaShellTab.startNewLine();
+            }
         } 
     }
 

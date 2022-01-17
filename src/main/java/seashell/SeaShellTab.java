@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
 public class SeaShellTab extends JTextArea {
     private Config config;
     private Interpreter interpreter;
-    private String prefix = "& ";
+    private String prefix = "&";
     private int prefixPosition;
 
     public SeaShellTab() {
@@ -24,6 +24,8 @@ public class SeaShellTab extends JTextArea {
         int[] bg = config.getBackgroundColor();
         setForeground(new Color(fg[0], fg[1], fg[2], fg[3]));
         setBackground(new Color(bg[0], bg[1], bg[2], bg[3]));
+        setLineWrap(true);
+        setPrefix(config.getPrefix().trim());
     }
     
     public void setInterpreter(Interpreter interpreter) {
@@ -49,18 +51,19 @@ public class SeaShellTab extends JTextArea {
         setCaretPosition(getText().length());
     }
 
-    public void setStartingText(String startingText) {
-        if (startingText != null && startingText.length() > 0)
-            this.prefix = startingText;
+    public void setPrefix(String prefix) {
+        if (prefix != null && prefix.length() > 0)
+            this.prefix = prefix;
     }
 
-    public String getStartingText() {
+    public String getPrefix() {
         return prefix;
     }
 
     public void startNewLine() {
-        if (!getText().endsWith("\n"))
+        String text = getText();
+        if (!text.isEmpty() && !text.endsWith("\n"))
             append("\n");
-        append(prefix);
+        append(prefix + " ");
     }
 }

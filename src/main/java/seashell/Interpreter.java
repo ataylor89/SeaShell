@@ -73,7 +73,7 @@ public class Interpreter {
             return;       
         
         String[] args = line.split("\\s+");
-                
+        
         if (process != null && process.isAlive()) 
             write(line);
         else if (args[0].equals("cd") && args.length == 2) {
@@ -82,6 +82,10 @@ public class Interpreter {
             if (file.exists() && file.isDirectory())
                 this.workingDirectory = file;
             
+            display.startNewLine();
+        }
+        else if (args[0].equals("clear") && args.length == 1) {
+            display.setText("");
             display.startNewLine();
         }
         else {    
