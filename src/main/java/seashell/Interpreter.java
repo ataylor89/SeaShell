@@ -17,14 +17,13 @@ public class Interpreter {
     private Config config;
     private Process process;
     private Logger logger;
-    private File workingDirectory, homeDirectory;
+    private File workingDirectory;
     
     public Interpreter(SeaShellTab display, Config config) {
         this.display = display;
         this.config = config;
         logger = AppLogger.getLogger();
         workingDirectory = new File(System.getProperty("user.dir"));
-        homeDirectory = new File(System.getProperty("user.home"));
     }
     
     private void write(String line) {
