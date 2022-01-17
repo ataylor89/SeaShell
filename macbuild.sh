@@ -1,3 +1,6 @@
+if [ ! -f ~/.seashell]; then
+    cp .seashell ~/.seashell
+fi
 if [ ! -f icons.icns ]; then
     ICON="icons/SeaShell4.png"   
     mkdir icons.iconset
