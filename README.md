@@ -23,5 +23,3 @@ SeaShell has a configuration file .seashell
 This file becomes active once it is installed in your home directory, ~/.seashell
 
 SeaShell loads ~/.seashell every time a new tab is created and gets its default configuration from ~/.seashell
-
-You can uncomment the first three lines of macbuild.sh and run macbuild.sh to install .seashell to your home directory
