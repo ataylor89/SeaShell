@@ -1,3 +1,6 @@
+if [ ! -f icons.icns ]; then   
+    ./icon.sh icons/SeaShell4.png
+fi
 mvn clean install
 mvn assembly:single
 jpackage --input target/ \
