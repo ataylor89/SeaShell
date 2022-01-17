@@ -28,7 +28,7 @@ public class Config {
     private void init() {
         logger = AppLogger.getLogger();
         properties = new Properties(getDefaults());
-        String path = System.getProperty("user.home") + System.getProperty("path.separator") + ".seashell";
+        String path = System.getProperty("user.home") + System.getProperty("file.separator") + ".seashell";
         try (FileInputStream in = new FileInputStream(path)) {
             properties.load(in);
         } catch (FileNotFoundException ex) {
@@ -45,7 +45,7 @@ public class Config {
     public String[] getPaths() {
         String[] arr = getPath().split(":");
         String[] paths = new String[arr.length + 1];
-        paths[0] = System.getProperty("user.dir");
+        paths[0] = System.getenv("PWD");
         System.arraycopy(arr, 0, paths, 1, arr.length);
         return paths;
     }
