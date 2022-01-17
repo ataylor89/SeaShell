@@ -12,6 +12,7 @@ Sea Shell can be installed on Mac OS X using the shell script macbuild.sh
 
 In the SeaShell folder type
 
-% ./macbuild.sh 
+    % chmod +x macbuild.sh
+    % ./macbuild.sh 
 
 This should install the icons, the JAR files, and the Mac OS X application
