@@ -55,7 +55,7 @@ The macbuild.sh script does the following
 2. The .. sequence gets replaced with the parent directory
 
 ## Path
-The default PATH is "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin" which is set in Config.java
+The default PATH is <code>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</code> which is set in Config.java
 
 The PATH and other properties can be modified in the properties file ~/.seashell
 
