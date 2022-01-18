@@ -41,12 +41,22 @@ public class Path {
             setPath(grandparent);
         else if (child.startsWith("../") && grandparent != null)
             setPath(child.replaceFirst("..", grandparent));
+        else if (isAbsolute(child))
+            setPath(child);
         else
             setPath(parent + SEPARATOR + child);             
     }
     
+    private boolean isAbsolute(String path) {
+        return path.startsWith("/");
+    }
+    
     private void setPath(String path) {
         this.path = path;
+    }
+    
+    public File toFile() {
+        return new File(path);
     }
     
     @Override

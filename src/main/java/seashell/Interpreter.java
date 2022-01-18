@@ -90,8 +90,7 @@ public class Interpreter {
         else {    
             String[] paths = config.getPaths();        
             for (String path : paths) {
-                String filePath = new Path(path, args[0]).toString();
-                File file = new File(filePath);
+                File file = new Path(path, args[0]).toFile(); 
                 if (file.exists() && !file.isDirectory()) {
                     run(args);
                     break;
