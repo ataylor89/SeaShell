@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -18,14 +17,14 @@ public class Interpreter {
     private Process process;
     private Logger logger;
     private File workingDirectory;
-    
+        
     public Interpreter(SeaShellTab display, Config config) {
         this.display = display;
         this.config = config;
         logger = AppLogger.getLogger();
         workingDirectory = new File(System.getProperty("user.dir"));
     }
-    
+   
     private void write(String line) {
         BufferedWriter writer = process.outputWriter();
         try {

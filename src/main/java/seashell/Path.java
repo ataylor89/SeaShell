@@ -9,37 +9,44 @@ import java.io.File;
 public class Path {
   
     private String path;
+    public static final String SEPARATOR = System.getProperty("file.separator");
     
     public Path(String path) {
-        this.path = substitute(path);
+        substitute(path);
     }
     
-    public Path(File parent, String path) {
-        this.path = substitute(parent.getPath(), path);
+    public Path(File parent, String child) {
+        substitute(parent.getParent(), parent.getPath(), child);
     }
     
-    public Path(String parent, String path) {
-        this.path = substitute(parent, path);
+    public Path(String parent, String child) {
+        this(new File(parent), child);
     }
     
-    private String substitute(String path) {
+    private void substitute(String path) {
         if (path.equals("~"))
-            path = System.getProperty("user.home");
-        if (path.startsWith("~"))
-            return path.replaceFirst("~", System.getProperty("user.home"));
-        return path;
+            setPath(System.getProperty("user.home"));
+        else if (path.startsWith("~"))
+            setPath(path.replaceFirst("~", System.getProperty("user.home")));
+        else
+            setPath(path);
     }
     
-    private String substitute(String parent, String path) {
-        if (path.equals("~"))
-            return System.getProperty("user.home");
-        if (path.equals("..") && parent != null)
-            return parent;
-        if (path.startsWith("~"))
-            return path.replaceFirst("~", System.getProperty("user.home"));
-        if (path.startsWith("..") && parent != null)
-            return path.replaceFirst("..", parent);
-        return parent + System.getProperty("file.separator") + path;             
+    private void substitute(String grandparent, String parent, String child) {
+        if (child.equals("~"))
+            setPath(System.getProperty("user.home"));
+        else if (child.startsWith("~"))
+            setPath(child.replaceFirst("~", System.getProperty("user.home")));
+        else if (child.equals("..") && grandparent != null)
+            setPath(grandparent);
+        else if (child.startsWith("../") && grandparent != null)
+            setPath(child.replaceFirst("..", grandparent));
+        else
+            setPath(parent + SEPARATOR + child);             
+    }
+    
+    private void setPath(String path) {
+        this.path = path;
     }
     
     @Override
