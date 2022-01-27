@@ -55,6 +55,7 @@ public class SeaShell extends JFrame implements ActionListener {
                         gray = new Color(204, 204, 204, 255),
                         blue = new Color(0, 0, 204, 255),
                         lightblue = new Color(0, 153, 255, 255);
+    private Config config;
     private Logger logger;
 
     public SeaShell() {
@@ -63,6 +64,7 @@ public class SeaShell extends JFrame implements ActionListener {
     
     public void init() {
         logger = AppLogger.getLogger();
+        config = new Config();
         setLookAndFeel();
     }
    
@@ -207,7 +209,7 @@ public class SeaShell extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == newTab) {
             String title = JOptionPane.showInputDialog(this, "Title:", "New tab", JOptionPane.QUESTION_MESSAGE);
-            SeaShellTab seaShellTab = new SeaShellTab();
+            SeaShellTab seaShellTab = new SeaShellTab(config);
             seaShellTab.startNewLine();
             JScrollPane scrollPane = new JScrollPane(seaShellTab);
             tabbedPane.addTab(title, scrollPane);
