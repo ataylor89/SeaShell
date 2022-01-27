@@ -64,7 +64,6 @@ public class SeaShell extends JFrame implements ActionListener {
     public void init() {
         logger = AppLogger.getLogger();
         setLookAndFeel();
-        logger.info(new EnvironmentMap("System environment", System.getenv()).toString());
     }
    
     public void createAndShowGui() {
